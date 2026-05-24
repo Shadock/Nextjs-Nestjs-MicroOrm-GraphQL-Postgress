@@ -1,0 +1,85 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  email: String!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Workspace {
+  id: Int!
+  name: String!
+  owner: User!
+}
+
+type WorkspaceMember {
+  id: Int!
+  user: User!
+  workspace: Workspace!
+  role: WorkspaceRole!
+}
+
+enum WorkspaceRole {
+  ADMIN
+  MEMBER
+}
+
+type Board {
+  id: Int!
+  title: String!
+  workspace: Workspace!
+}
+
+type Task {
+  id: Int!
+  title: String!
+  description: String!
+  status: TaskStatus!
+  order: Int!
+  board: Board!
+  assignee: User!
+}
+
+enum TaskStatus {
+  TODO
+  DOING
+  DONE
+}
+
+type Comment {
+  id: Int!
+  content: String!
+  task: Task!
+  author: User!
+  createdAt: DateTime!
+}
+
+type Query {
+  me: User!
+  workspaces: [Workspace!]!
+  members(workspaceId: Float!): [WorkspaceMember!]!
+  boards(workspaceId: Float!): [Board!]!
+  tasks(boardId: Float!): [Task!]!
+  comments(taskId: Float!): [Comment!]!
+}
+
+type Mutation {
+  register(email: String!, password: String!): User!
+  login(email: String!, password: String!): String!
+  createWorkspace(name: String!): Workspace!
+  inviteUserToWorkspace(workspaceId: Float!, userId: Float!): Boolean!
+  makeAdmin(workspaceId: Float!, userId: Float!): Boolean!
+  createBoard(title: String!, workspaceId: Float!): Board!
+  createTask(title: String!, description: String!, boardId: Float!): Task!
+  updateTaskStatus(taskId: Float!, status: TaskStatus!): Task!
+  reorderTasks(taskId: Float!, newOrder: Float!): Boolean!
+  moveTask(taskId: Float!, status: TaskStatus!, order: Float!): Task!
+  createComment(content: String!, taskId: Float!): Comment!
+}
