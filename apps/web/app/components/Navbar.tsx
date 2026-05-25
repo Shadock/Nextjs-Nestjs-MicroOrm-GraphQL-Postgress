@@ -8,6 +8,8 @@ export default function Navbar() {
   const [token, setToken] = useState<string | undefined>();
 
   useEffect(() => {
+    // REVIEW: eslint react-hooks/set-state-in-effect remonte ce setState synchrone.
+    // En plus, stocker le JWT en cookie lisible JS augmente la surface XSS.
     setToken(Cookies.get('token'));
   }, []);
 

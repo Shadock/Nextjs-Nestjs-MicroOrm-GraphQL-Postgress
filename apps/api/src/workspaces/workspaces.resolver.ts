@@ -33,12 +33,16 @@ inviteUserToWorkspace(
   @Args('workspaceId') workspaceId: number,
   @Args('userId') userId: number,
 ) {
+  // REVIEW: manque du user courant ici ; sans vérification de rôle côté service,
+  // tout utilisateur authentifié peut inviter un membre sur n'importe quel workspace.
   return this.workspacesService.addMember(workspaceId, userId);
 }
 
 @UseGuards(JwtAuthGuard)
 @Query(() => [WorkspaceMember])
 members(@Args('workspaceId') workspaceId: number) {
+  // REVIEW: endpoint exposé sans contrôle d'appartenance au workspace.
+  // Risque de fuite d'emails/IDs des membres.
   return this.workspacesService.getMembers(workspaceId);
 }
 

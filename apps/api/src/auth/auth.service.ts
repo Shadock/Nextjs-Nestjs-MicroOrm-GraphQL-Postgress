@@ -32,6 +32,7 @@ export class AuthService {
     const user = await this.em.findOne(User, { email });
 
     if (!user) {
+      // REVIEW: message différent de "Invalid password" => user enumeration possible.
       throw new Error('User not found');
     }
 

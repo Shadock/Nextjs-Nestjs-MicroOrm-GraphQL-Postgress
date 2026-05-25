@@ -29,6 +29,8 @@ export class TasksResolver {
   @UseGuards(JwtAuthGuard)
   @Query(() => [Task])
   tasks(@Args('boardId') boardId: number) {
+    // REVIEW: pas de contrôle d'accès par board/workspace pour l'utilisateur courant.
+    // Risque d'exposition inter-workspace via énumération d'IDs.
     return this.tasksService.findByBoard(boardId);
   }
 
@@ -39,6 +41,7 @@ updateTaskStatus(
   @Args('taskId') taskId: number,
   @Args('status', { type: () => TaskStatus }) status: TaskStatus,
 ) {
+  // REVIEW: mutation sensible sans vérification d'appartenance à la tâche/au board.
   return this.tasksService.updateStatus(taskId, status);
 }
 @UseGuards(JwtAuthGuard)
@@ -47,6 +50,8 @@ reorderTasks(
   @Args('taskId') taskId: number,
   @Args('newOrder') newOrder: number,
 ) {
+  // REVIEW: même problème d'autorisation ; n'importe quel user authentifié
+  // peut réordonner des tâches en dehors de son périmètre.
   return this.tasksService.reorder(taskId, newOrder);
 }
 
@@ -57,6 +62,7 @@ moveTask(
   @Args('status', { type: () => TaskStatus }) status: TaskStatus,
   @Args('order') order: number,
 ) {
+  // REVIEW: vérifier rôle/membership avant déplacement pour éviter les modifications inter-tenant.
   return this.tasksService.moveTask(taskId, status, order);
 }
 }
