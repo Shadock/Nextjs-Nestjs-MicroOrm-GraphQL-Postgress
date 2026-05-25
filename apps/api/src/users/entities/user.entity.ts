@@ -13,7 +13,6 @@ registerEnumType(UserRole, {
 @ObjectType()
 @Entity()
 export class User {
-
   @Field(() => Int)
   @PrimaryKey()
   id!: number;

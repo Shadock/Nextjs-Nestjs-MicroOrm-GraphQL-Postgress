@@ -5,7 +5,6 @@ import { User } from '../../users/entities/user.entity';
 @ObjectType()
 @Entity()
 export class Workspace {
-
   @Field(() => Int)
   @PrimaryKey()
   id!: number;
@@ -14,7 +13,6 @@ export class Workspace {
   @Property()
   name!: string;
 
-  
   @Field(() => User)
   @ManyToOne(() => User)
   owner!: User;

@@ -6,7 +6,6 @@ import { User } from '../../users/entities/user.entity';
 @ObjectType()
 @Entity()
 export class Comment {
-
   @Field(() => Int)
   @PrimaryKey()
   id!: number;
@@ -23,12 +22,10 @@ export class Comment {
   @ManyToOne(() => User)
   author!: User;
 
-  
-@Field(() => Date)
-@Property({
-  onCreate: () => new Date(),
-  nullable: true,
-})
-createdAt?: Date;
-
+  @Field(() => Date)
+  @Property({
+    onCreate: () => new Date(),
+    nullable: true,
+  })
+  createdAt?: Date;
 }

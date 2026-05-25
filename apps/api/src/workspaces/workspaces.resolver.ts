@@ -14,10 +14,7 @@ export class WorkspacesResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Workspace)
-  createWorkspace(
-    @Args('name') name: string,
-    @CurrentUser() user: any,
-  ) {
+  createWorkspace(@Args('name') name: string, @CurrentUser() user: any) {
     return this.workspacesService.create(name, user.userId);
   }
 
@@ -40,7 +37,12 @@ export class WorkspacesResolver {
     @Args('userId') userId: number,
     @CurrentUser() currentUser: any,
   ) {
-    return this.workspacesService.addMember(workspaceId, userId, currentUser.userId, currentUser.role);
+    return this.workspacesService.addMember(
+      workspaceId,
+      userId,
+      currentUser.userId,
+      currentUser.role,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,7 +52,12 @@ export class WorkspacesResolver {
     @Args('email') email: string,
     @CurrentUser() currentUser: any,
   ) {
-    return this.workspacesService.addMemberByEmail(workspaceId, email, currentUser.userId, currentUser.role);
+    return this.workspacesService.addMemberByEmail(
+      workspaceId,
+      email,
+      currentUser.userId,
+      currentUser.role,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -59,7 +66,11 @@ export class WorkspacesResolver {
     @Args('workspaceId') workspaceId: number,
     @CurrentUser() currentUser: any,
   ) {
-    return this.workspacesService.getMembers(workspaceId, currentUser.userId, currentUser.role);
+    return this.workspacesService.getMembers(
+      workspaceId,
+      currentUser.userId,
+      currentUser.role,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -69,7 +80,12 @@ export class WorkspacesResolver {
     @Args('userId') userId: number,
     @CurrentUser() currentUser: any,
   ) {
-    return this.workspacesService.makeAdmin(workspaceId, userId, currentUser.userId, currentUser.role);
+    return this.workspacesService.makeAdmin(
+      workspaceId,
+      userId,
+      currentUser.userId,
+      currentUser.role,
+    );
   }
 
   // ─── Global admin endpoints ─────────────────────────────────────────────
@@ -101,4 +117,3 @@ export class WorkspacesResolver {
     return this.workspacesService.deleteWorkspace(workspaceId);
   }
 }
-

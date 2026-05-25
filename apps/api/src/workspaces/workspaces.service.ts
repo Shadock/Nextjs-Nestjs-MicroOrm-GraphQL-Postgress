@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Workspace } from './entities/workspace.entity';
 import { User, UserRole } from '../users/entities/user.entity';
-import { WorkspaceMember, WorkspaceRole } from './entities/workspace-member.entity';
+import {
+  WorkspaceMember,
+  WorkspaceRole,
+} from './entities/workspace-member.entity';
 
 @Injectable()
 export class WorkspacesService {
@@ -21,7 +24,7 @@ export class WorkspacesService {
     });
 
     await this.em.persistAndFlush(workspace);
-    
+
     const member = this.em.create(WorkspaceMember, {
       user,
       workspace,
@@ -52,7 +55,12 @@ export class WorkspacesService {
     );
   }
 
-  async addMember(workspaceId: number, userId: number, requesterId: number, requesterRole: UserRole) {
+  async addMember(
+    workspaceId: number,
+    userId: number,
+    requesterId: number,
+    requesterRole: UserRole,
+  ) {
     const workspace = await this.em.findOne(Workspace, { id: workspaceId });
     if (!workspace) throw new Error('Workspace not found');
 
@@ -62,7 +70,10 @@ export class WorkspacesService {
         workspace: workspaceId,
         user: requesterId,
       });
-      if (!requesterMembership || requesterMembership.role !== WorkspaceRole.ADMIN) {
+      if (
+        !requesterMembership ||
+        requesterMembership.role !== WorkspaceRole.ADMIN
+      ) {
         throw new Error('Only workspace admin can invite members');
       }
     }
@@ -87,13 +98,22 @@ export class WorkspacesService {
     return true;
   }
 
-  async addMemberByEmail(workspaceId: number, email: string, requesterId: number, requesterRole: UserRole) {
+  async addMemberByEmail(
+    workspaceId: number,
+    email: string,
+    requesterId: number,
+    requesterRole: UserRole,
+  ) {
     const user = await this.em.findOne(User, { email });
     if (!user) throw new Error('User not found');
     return this.addMember(workspaceId, user.id, requesterId, requesterRole);
   }
 
-  async getMembers(workspaceId: number, requesterId: number, requesterRole: UserRole) {
+  async getMembers(
+    workspaceId: number,
+    requesterId: number,
+    requesterRole: UserRole,
+  ) {
     if (requesterRole !== UserRole.GLOBAL_ADMIN) {
       const membership = await this.em.findOne(WorkspaceMember, {
         workspace: workspaceId,
@@ -109,7 +129,12 @@ export class WorkspacesService {
     );
   }
 
-  async makeAdmin(workspaceId: number, userId: number, currentUserId: number, currentUserRole: UserRole) {
+  async makeAdmin(
+    workspaceId: number,
+    userId: number,
+    currentUserId: number,
+    currentUserRole: UserRole,
+  ) {
     if (currentUserRole !== UserRole.GLOBAL_ADMIN) {
       const requester = await this.em.findOne(WorkspaceMember, {
         workspace: workspaceId,
@@ -154,7 +179,10 @@ export class WorkspacesService {
     const user = await this.em.findOne(User, { id: userId });
     if (!user) throw new Error('User not found');
 
-    const existing = await this.em.findOne(WorkspaceMember, { workspace, user });
+    const existing = await this.em.findOne(WorkspaceMember, {
+      workspace,
+      user,
+    });
     if (existing) return true; // already assigned
 
     const member = this.em.create(WorkspaceMember, {
@@ -172,7 +200,9 @@ export class WorkspacesService {
     if (!workspace) throw new Error('Workspace not found');
 
     // Remove all members first
-    const members = await this.em.find(WorkspaceMember, { workspace: workspaceId });
+    const members = await this.em.find(WorkspaceMember, {
+      workspace: workspaceId,
+    });
     for (const m of members) {
       this.em.remove(m);
     }

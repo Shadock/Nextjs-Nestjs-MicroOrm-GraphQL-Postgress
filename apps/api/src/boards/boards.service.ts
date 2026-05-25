@@ -2,14 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Board } from './entities/board.entity';
 import { Workspace } from '../workspaces/entities/workspace.entity';
-import { WorkspaceMember, WorkspaceRole } from '../workspaces/entities/workspace-member.entity';
+import {
+  WorkspaceMember,
+  WorkspaceRole,
+} from '../workspaces/entities/workspace-member.entity';
 import { UserRole } from '../users/entities/user.entity';
 
 @Injectable()
 export class BoardsService {
   constructor(private readonly em: EntityManager) {}
 
-  async create(title: string, workspaceId: number, userId: number) {   
+  async create(title: string, workspaceId: number, userId: number) {
     const membership = await this.em.findOne(WorkspaceMember, {
       workspace: workspaceId,
       user: userId,
@@ -38,7 +41,11 @@ export class BoardsService {
     return board;
   }
 
-  async findByWorkspace(workspaceId: number, userId: number, userRole: UserRole) {
+  async findByWorkspace(
+    workspaceId: number,
+    userId: number,
+    userRole: UserRole,
+  ) {
     if (userRole !== UserRole.GLOBAL_ADMIN) {
       const membership = await this.em.findOne(WorkspaceMember, {
         workspace: workspaceId,
@@ -50,8 +57,7 @@ export class BoardsService {
     return this.em.find(
       Board,
       { workspace: workspaceId },
-      { populate: ['workspace.owner'] }
+      { populate: ['workspace.owner'] },
     );
   }
 }
-

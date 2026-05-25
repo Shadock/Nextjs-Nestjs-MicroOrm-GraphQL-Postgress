@@ -17,11 +17,7 @@ export class CommentsResolver {
     @Args('taskId') taskId: number,
     @CurrentUser() user: any,
   ) {
-    return this.commentsService.create(
-      content,
-      taskId,
-      user.userId,
-    );
+    return this.commentsService.create(content, taskId, user.userId);
   }
 
   // ✅ GET COMMENTS BY TASK

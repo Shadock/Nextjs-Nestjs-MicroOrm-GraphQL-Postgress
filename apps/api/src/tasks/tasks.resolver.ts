@@ -14,19 +14,23 @@ export class TasksResolver {
   @Mutation(() => Task)
   createTask(
     @Args('title') title: string,
-    @Args('description', { nullable: true, defaultValue: '' }) description: string,
+    @Args('description', { nullable: true, defaultValue: '' })
+    description: string,
     @Args('boardId') boardId: number,
     @CurrentUser() user: any,
   ) {
-    return this.tasksService.create(title, description, boardId, user.userId, user.role);
+    return this.tasksService.create(
+      title,
+      description,
+      boardId,
+      user.userId,
+      user.role,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @Query(() => [Task])
-  tasks(
-    @Args('boardId') boardId: number,
-    @CurrentUser() user: any,
-  ) {
+  tasks(@Args('boardId') boardId: number, @CurrentUser() user: any) {
     return this.tasksService.findByBoard(boardId, user.userId, user.role);
   }
 
@@ -37,7 +41,12 @@ export class TasksResolver {
     @Args('status', { type: () => TaskStatus }) status: TaskStatus,
     @CurrentUser() user: any,
   ) {
-    return this.tasksService.updateStatus(taskId, status, user.userId, user.role);
+    return this.tasksService.updateStatus(
+      taskId,
+      status,
+      user.userId,
+      user.role,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -58,7 +67,12 @@ export class TasksResolver {
     @Args('order') order: number,
     @CurrentUser() user: any,
   ) {
-    return this.tasksService.moveTask(taskId, status, order, user.userId, user.role);
+    return this.tasksService.moveTask(
+      taskId,
+      status,
+      order,
+      user.userId,
+      user.role,
+    );
   }
 }
-

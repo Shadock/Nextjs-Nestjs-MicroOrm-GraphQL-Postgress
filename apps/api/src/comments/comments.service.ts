@@ -17,8 +17,8 @@ export class CommentsService {
 
     const comment = this.em.create(Comment, {
       content,
-      task: task!,
-      author: user!,
+      task: task,
+      author: user,
     });
 
     await this.em.persistAndFlush(comment);
@@ -32,7 +32,7 @@ export class CommentsService {
       {
         populate: ['author', 'task'],
         orderBy: { createdAt: 'ASC' },
-      }
+      },
     );
   }
 }

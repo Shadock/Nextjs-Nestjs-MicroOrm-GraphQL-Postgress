@@ -3,11 +3,11 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 const config: Options<PostgreSqlDriver> = {
   driver: PostgreSqlDriver,
-  dbName: 'app_db',
-  user: 'postgres',
-  password: 'postgres',
-  host: 'db',
-  port: 5432,
+  dbName: process.env.POSTGRES_DB || 'app_db',
+  user: process.env.POSTGRES_USER || 'postgres',
+  password: process.env.POSTGRES_PASSWORD || 'postgres',
+  host: process.env.POSTGRES_HOST || 'db',
+  port: parseInt(process.env.POSTGRES_PORT || '5432', 10),
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
 };
