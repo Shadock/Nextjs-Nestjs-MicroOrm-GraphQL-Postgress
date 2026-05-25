@@ -16,8 +16,8 @@ const GET_TASKS = gql`
 `;
 
 const CREATE_TASK = gql`
-  mutation ($title: String!, $boardId: Float!) {
-    createTask(title: $title, description: "", boardId: $boardId) {
+  mutation ($title: String!, $description: String!, $boardId: Float!) {
+    createTask(title: $title, description: $description, boardId: $boardId) {
       id
       title
       status
@@ -39,7 +39,7 @@ const MOVE_TASK = gql`
 type Task = {
   id: number;
   title: string;
-  status: 'TODO' | 'DOING' | 'DONE';
+  status: 'TODO' | 'DOING' | 'DONE' | 'WAITING';
   order: number;
 };
 
@@ -53,6 +53,7 @@ type CreateTaskResponse = {
 
 type CreateTaskVariables = {
   title: string;
+  description: string;
   boardId: number;
 };
 
@@ -64,26 +65,26 @@ export function useTasks(boardId: number) {
   const [createTaskMutation, { loading: creating }] =
     useMutation<CreateTaskResponse, CreateTaskVariables>(CREATE_TASK);
   
- 
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
 
   const handleCreate = async () => {
     if (!title.trim()) return;
 
     await createTaskMutation({
-      variables: { title, boardId },
+      variables: { title, description, boardId },
     });
 
     setTitle('');
+    setDescription('');
     await refetch();
   };
   
- 
 const [moveTaskMutation] = useMutation(MOVE_TASK);
 
   const moveTask = async (
     taskId: number,
-    status: 'TODO' | 'DOING' | 'DONE',
+    status: 'TODO' | 'DOING' | 'DONE' | 'WAITING',
     order: number
   ) => {
     await moveTaskMutation({
@@ -101,6 +102,8 @@ const [moveTaskMutation] = useMutation(MOVE_TASK);
     creating,  
     title,
     setTitle,
+    description,
+    setDescription,
     handleCreate,
     moveTask,
   };

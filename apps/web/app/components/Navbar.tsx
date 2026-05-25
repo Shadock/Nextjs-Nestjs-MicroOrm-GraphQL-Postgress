@@ -6,11 +6,20 @@ import { useState, useEffect } from 'react';
 
 export default function Navbar() {
   const [token, setToken] = useState<string | undefined>();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // REVIEW: eslint react-hooks/set-state-in-effect remonte ce setState synchrone.
-    // En plus, stocker le JWT en cookie lisible JS augmente la surface XSS.
-    setToken(Cookies.get('token'));
+    const t = Cookies.get('token');
+    setToken(t);
+
+    if (t) {
+      try {
+        const payload = JSON.parse(atob(t.split('.')[1]));
+        setIsAdmin(payload.role === 'GLOBAL_ADMIN');
+      } catch {
+        // ignore malformed token
+      }
+    }
   }, []);
 
   const handleLogout = () => {
@@ -24,12 +33,18 @@ export default function Navbar() {
       {/* Left */}
       <div className="flex gap-4 items-center">
         <Link href="/" className="font-bold text-lg">
-          MyApp
+          WorkspaceApp
         </Link>
 
         {token && (
           <Link href="/dashboard" className="text-sm text-gray-600">
             Dashboard
+          </Link>
+        )}
+
+        {token && isAdmin && (
+          <Link href="/admin" className="text-sm text-purple-600 font-medium">
+            Admin
           </Link>
         )}
       </div>
@@ -40,11 +55,11 @@ export default function Navbar() {
         {!token && (
           <>
             <Link href="/login" className="text-sm">
-              Login
+              Connexion
             </Link>
 
             <Link href="/register" className="text-sm">
-              Register
+              S&apos;inscrire
             </Link>
           </>
         )}
@@ -54,7 +69,7 @@ export default function Navbar() {
             onClick={handleLogout}
             className="text-sm text-red-500"
           >
-            Logout
+            Déconnexion
           </button>
         )}
 
