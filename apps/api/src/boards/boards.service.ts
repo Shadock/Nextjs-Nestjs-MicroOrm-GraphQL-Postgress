@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Board } from './entities/board.entity';
 import { Workspace } from '../workspaces/entities/workspace.entity';
-import { WorkspaceMember, WorkspaceRole } from '../workspaces/entities/workspace-member.entity'
+import { WorkspaceMember, WorkspaceRole } from '../workspaces/entities/workspace-member.entity';
+import { UserRole } from '../users/entities/user.entity';
 
 @Injectable()
 export class BoardsService {
@@ -37,7 +38,15 @@ export class BoardsService {
     return board;
   }
 
-  async findByWorkspace(workspaceId: number) {
+  async findByWorkspace(workspaceId: number, userId: number, userRole: UserRole) {
+    if (userRole !== UserRole.GLOBAL_ADMIN) {
+      const membership = await this.em.findOne(WorkspaceMember, {
+        workspace: workspaceId,
+        user: userId,
+      });
+      if (!membership) throw new Error('Access denied');
+    }
+
     return this.em.find(
       Board,
       { workspace: workspaceId },

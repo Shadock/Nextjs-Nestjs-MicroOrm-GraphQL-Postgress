@@ -17,8 +17,9 @@ import { EntityManager } from '@mikro-orm/core';
   async register(
     @Args('email') email: string,
     @Args('password') password: string,
+    @Args('username', { nullable: true }) username?: string,
   ) {
-    return this.authService.register(email, password);
+    return this.authService.register(email, password, username);
   }
 
   

@@ -22,9 +22,11 @@ export class BoardsResolver {
 
   @UseGuards(JwtAuthGuard)
   @Query(() => [Board])
-  boards(@Args('workspaceId') workspaceId: number) {
-    // REVIEW: aucune vérification que l'utilisateur courant appartient au workspace.
-    // Un simple ID permet de lister des boards d'un autre tenant.
-    return this.boardsService.findByWorkspace(workspaceId);
+  boards(
+    @Args('workspaceId') workspaceId: number,
+    @CurrentUser() user: any,
+  ) {
+    return this.boardsService.findByWorkspace(workspaceId, user.userId, user.role);
   }
 }
+

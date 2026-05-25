@@ -7,6 +7,7 @@ export enum TaskStatus {
   TODO = 'TODO',
   DOING = 'DOING',
   DONE = 'DONE',
+  WAITING = 'WAITING',
 }
 
 registerEnumType(TaskStatus, {
