@@ -17,5 +17,7 @@ export function useAuth(protectedRoute: boolean) {
     if (!protectedRoute && token) {
       router.push('/dashboard');
     }
+    // REVIEW: dépendances manquantes (protectedRoute, router) signalées par eslint.
+    // Si la route change dynamiquement, le redirect peut devenir incohérent.
   }, []);
 }
