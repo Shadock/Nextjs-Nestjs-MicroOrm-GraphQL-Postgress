@@ -6,10 +6,10 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { CurrentUser } from './current-user.decorator';
 import { EntityManager } from '@mikro-orm/core';
 
-
-  @Resolver()
-  export class AuthResolver {
-    constructor(private readonly authService: AuthService,
+@Resolver()
+export class AuthResolver {
+  constructor(
+    private readonly authService: AuthService,
     private readonly entityManager: EntityManager,
   ) {}
 
@@ -17,11 +17,11 @@ import { EntityManager } from '@mikro-orm/core';
   async register(
     @Args('email') email: string,
     @Args('password') password: string,
+    @Args('username', { nullable: true }) username?: string,
   ) {
-    return this.authService.register(email, password);
+    return this.authService.register(email, password, username);
   }
 
-  
   @Mutation(() => String)
   async login(
     @Args('email') email: string,

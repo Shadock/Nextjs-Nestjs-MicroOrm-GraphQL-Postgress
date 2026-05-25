@@ -5,7 +5,6 @@ import { Workspace } from '../../workspaces/entities/workspace.entity';
 @ObjectType()
 @Entity()
 export class Board {
-
   @Field(() => Int)
   @PrimaryKey()
   id!: number;

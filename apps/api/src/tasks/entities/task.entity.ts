@@ -7,6 +7,7 @@ export enum TaskStatus {
   TODO = 'TODO',
   DOING = 'DOING',
   DONE = 'DONE',
+  WAITING = 'WAITING',
 }
 
 registerEnumType(TaskStatus, {
@@ -16,7 +17,6 @@ registerEnumType(TaskStatus, {
 @ObjectType()
 @Entity()
 export class Task {
-
   @Field(() => Int)
   @PrimaryKey()
   id!: number;
@@ -32,7 +32,7 @@ export class Task {
   @Field(() => TaskStatus)
   @Enum(() => TaskStatus)
   status: TaskStatus = TaskStatus.TODO;
-  
+
   @Field(() => Int)
   @Property({ default: 0 })
   order!: number;

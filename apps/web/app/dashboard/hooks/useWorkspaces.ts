@@ -3,11 +3,15 @@
 import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 
-const GET_WORKSPACES = gql`
+const GET_MY_MEMBERSHIPS = gql`
   query {
-    workspaces {
+    myWorkspaceMemberships {
       id
-      name
+      role
+      workspace {
+        id
+        name
+      }
     }
   }
 `;
@@ -21,17 +25,21 @@ const CREATE_WORKSPACE = gql`
   }
 `;
 
-type Workspace = {
+type Membership = {
   id: number;
-  name: string;
+  role: 'ADMIN' | 'MEMBER';
+  workspace: {
+    id: number;
+    name: string;
+  };
 };
 
-type GetWorkspacesResponse = {
-  workspaces: Workspace[];
+type GetMembershipsResponse = {
+  myWorkspaceMemberships: Membership[];
 };
 
 type CreateWorkspaceResponse = {
-  createWorkspace: Workspace;
+  createWorkspace: { id: number; name: string };
 };
 
 type CreateWorkspaceVariables = {
@@ -40,7 +48,7 @@ type CreateWorkspaceVariables = {
 
 export function useWorkspaces() {
   const { data, loading, refetch } =
-    useQuery<GetWorkspacesResponse>(GET_WORKSPACES);
+    useQuery<GetMembershipsResponse>(GET_MY_MEMBERSHIPS);
 
   const [createWorkspaceMutation] =
     useMutation<CreateWorkspaceResponse, CreateWorkspaceVariables>(
@@ -52,11 +60,11 @@ export function useWorkspaces() {
       variables: { name },
     });
 
-    await refetch(); // refresh list
+    await refetch();
   };
 
   return {
-    workspaces: data?.workspaces || [],
+    memberships: data?.myWorkspaceMemberships || [],
     loading,
     createWorkspace,
   };

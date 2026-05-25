@@ -16,7 +16,6 @@ registerEnumType(WorkspaceRole, {
 @ObjectType()
 @Entity()
 export class WorkspaceMember {
-
   @Field(() => Int)
   @PrimaryKey()
   id!: number;

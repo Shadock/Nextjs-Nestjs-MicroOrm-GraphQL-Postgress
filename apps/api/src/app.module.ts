@@ -12,16 +12,19 @@ import { BoardsModule } from './boards/boards.module';
 import { TasksModule } from './tasks/tasks.module';
 import { CommentsModule } from './comments/comments.module';
 
-
 @Module({
   imports: [
-    MikroOrmModule.forRoot(config), 
+    MikroOrmModule.forRoot(config),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
     }),
-    AuthModule, WorkspacesModule, BoardsModule, TasksModule, CommentsModule
+    AuthModule,
+    WorkspacesModule,
+    BoardsModule,
+    TasksModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
